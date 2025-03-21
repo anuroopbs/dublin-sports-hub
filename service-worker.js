@@ -17,6 +17,9 @@ const urlsToCache = [
   '/icons/icon-192x192.png',
   '/icons/icon-384x384.png',
   '/icons/icon-512x512.png'
+  '/icons/splash.png',
+  'https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'
 ];
 
 // Install event - cache assets
