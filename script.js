@@ -1,14 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
-    const dateInput = document.getElementById('date');
-    const timeSlots = document.querySelectorAll('.time-slot');
-    const bookingForm = document.getElementById('booking-form');
-    const bookingStatus = document.getElementById('booking-status');
-    const confirmationModal = document.getElementById('confirmation-modal');
-    const closeModalBtn = document.getElementById('close-modal');
-    const closeModalX = document.querySelector('.close');
-    const bookingDetails = document.getElementById('booking-details');
-    
 // Function to send notification emails
 function sendNotificationEmail(bookingData) {
     var templateParams = {
@@ -33,8 +22,18 @@ Special Requests: ${bookingData.notes || 'None'}`
         });
 }
 
-
-
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Get elements
+    const dateInput = document.getElementById('date');
+    const timeSlots = document.querySelectorAll('.time-slot');
+    const bookingForm = document.getElementById('booking-form');
+    const bookingStatus = document.getElementById('booking-status');
+    const confirmationModal = document.getElementById('confirmation-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const closeModalX = document.querySelector('.close');
+    const bookingDetails = document.getElementById('booking-details');
+    
     // Set minimum date to today
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -124,8 +123,8 @@ Special Requests: ${bookingData.notes || 'None'}`
         // Show confirmation modal
         confirmationModal.style.display = 'block';
         
-        // In a real application, you would send this data to a server
-        console.log('Booking submitted:', {
+        // Create booking data object
+        const bookingData = {
             date: selectedDate,
             time: selectedTimeSlot,
             name,
@@ -133,7 +132,13 @@ Special Requests: ${bookingData.notes || 'None'}`
             phone,
             experience,
             notes
-        });
+        };
+        
+        // Log booking data
+        console.log('Booking submitted:', bookingData);
+        
+        // Send email notification
+        sendNotificationEmail(bookingData);
     });
     
     // Close modal when clicking the close button
