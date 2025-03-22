@@ -10,17 +10,6 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
-<!-- EmailJS Library -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
-<!-- EmailJS Configuration -->
-<script type="text/javascript">
-   (function()  {
-      // Your EmailJS User ID
-      emailjs.init("ZgXmIUv7-hSz3exxI");
-   })();
-</script>
-
 <body>
     <header>
         <div class="logo">
@@ -140,12 +129,22 @@
         </div>
     </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="firebase-config.js" type="module"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js" type="module"></script>
     <script src="db.js"></script>
     <script src="script.js"></script>
     <script src="pwa.js"></script>
+    
+    <!-- EmailJS Library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- EmailJS Configuration -->
+    <script type="text/javascript">
+       (function()  {
+          // Your EmailJS User ID
+          emailjs.init("ZgXmIUv7-hSz3exxI");
+       })();
+    </script>
 </body>
 </html>
