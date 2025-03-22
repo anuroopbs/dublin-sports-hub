@@ -1,30 +1,5 @@
-// Function to send notification emails
-function sendNotificationEmail(bookingData) {
-    var templateParams = {
-        to_email: 'anuroopquestion7@gmail.com',
-        from_name: 'Dublin Sports Hub',
-        user_name: bookingData.name,
-        action: 'coaching booking',
-        details: `Date: ${formatDate(bookingData.date)}
-Time: ${bookingData.time}
-Name: ${bookingData.name}
-Email: ${bookingData.email}
-Phone: ${bookingData.phone}
-Experience Level: ${bookingData.experience}
-Special Requests: ${bookingData.notes || 'None'}`
-    };
-    
-    emailjs.send('DublinSportsHub', 'notification_template', templateParams)
-        .then(function(response) {
-            console.log('Email notification sent!', response.status);
-        }, function(error) {
-            console.log('Failed to send email notification...', error);
-        });
-}
-
-// Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Get elements
+    // DOM Elements
     const dateInput = document.getElementById('date');
     const timeSlots = document.querySelectorAll('.time-slot');
     const bookingForm = document.getElementById('booking-form');
@@ -34,6 +9,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeModalX = document.querySelector('.close');
     const bookingDetails = document.getElementById('booking-details');
     
+    // Function to send notification emails
+    function sendNotificationEmail(bookingData) {
+        var templateParams = {
+            to_email: 'anuroopquestion7@gmail.com',
+            from_name: 'Dublin Sports Hub',
+            user_name: bookingData.name,
+            action: 'coaching booking',
+            details: `Date: ${formatDate(bookingData.date)}
+Time: ${bookingData.time}
+Name: ${bookingData.name}
+Email: ${bookingData.email}
+Phone: ${bookingData.phone}
+Experience Level: ${bookingData.experience}
+Special Requests: ${bookingData.notes || 'None'}`
+        };
+        
+        emailjs.send('DublinSportsHub', 'notification_template', templateParams)
+            .then(function(response) {
+                console.log('Email notification sent!', response.status);
+            }, function(error) {
+                console.log('Failed to send email notification...', error);
+            });
+    }
+
     // Set minimum date to today
     const today = new Date();
     const yyyy = today.getFullYear();
