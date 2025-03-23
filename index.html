@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="mobile.css">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+<!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+   (function()  {
+      emailjs.init("YOUR_USER_ID"); // Get this from EmailJS dashboard > Account > API Keys
+   })();
+</script>
+
 </head>
 <body>
     <header>
