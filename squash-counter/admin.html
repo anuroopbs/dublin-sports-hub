@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M0VCIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE0IDEwbC0yIDFtMCAwbC0yLTFtMiAxdjIuNU0yMCA3bC0yIDFtMi0xbC0yLTFtMiAxdjIuNU0xNCA0bC0yLTEtMiAxTTQgN2wyLTFNNCA3bDIgMU00IDd2Mi41TTEyIDIxbC0yLTFtMiAxbDItMW0tMiAxdi0yLjVNNiAxOGwtMi0xdi0yLjVNMTggMThsMi0xdi0yLjUiIC8+PC9zdmc+" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Dublin Squash Initiative</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Admin dashboard for Dublin Squash Initiative counter" />
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <div class="header-content">
+          <div class="header-logo">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="logo-icon" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" 
+              />
+            </svg>
+            <a href="/" class="logo-text">Dublin Squash Initiative</a>
+          </div>
+          
+          <div id="auth-status">
+            <a href="/" class="admin-button">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                class="admin-icon" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" 
+                />
+              </svg>
+              Home
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <!-- Login Form (shown by default) -->
+        <div id="login-form-container" class="admin-container">
+          <h2 class="admin-title">Admin Login</h2>
+          <div id="login-alert" class="alert alert-danger hidden"></div>
+          
+          <form id="login-form">
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" id="password" class="form-input" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+          </form>
+        </div>
+        
+        <!-- Counter Update Form (hidden by default) -->
+        <div id="counter-form-container" class="admin-container hidden">
+          <h2 class="admin-title">Update Squash Counter</h2>
+          <div id="counter-alert" class="alert hidden"></div>
+          
+          <div id="current-counter" class="form-group">
+            <p>Loading current count...</p>
+          </div>
+          
+          <form id="counter-form">
+            <div class="form-group">
+              <label for="new-count" class="form-label">New Count</label>
+              <input type="number" id="new-count" class="form-input" min="0" required>
+            </div>
+            
+            <div class="action-buttons">
+              <button type="submit" class="btn btn-primary">Update Counter</button>
+              <button type="button" id="logout-btn" class="btn btn-secondary">Logout</button>
+            </div>
+          </form>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-content">
+          <div>© <span id="current-year"></span> Dublin Squash Initiative</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">About</a>
+            <span class="footer-divider">|</span>
+            <a href="#" class="footer-link">Contact</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="db.js"></script>
+    <script type="module">
+      import { getCounterData, updateCounterData, adminLogin, adminLogout, isAdminLoggedIn } from './db.js';
+      
+      // Set current year in footer
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+      
+      // DOM elements
+      const loginFormContainer = document.getElementById('login-form-container');
+      const counterFormContainer = document.getElementById('counter-form-container');
+      const loginForm = document.getElementById('login-form');
+      const counterForm = document.getElementById('counter-form');
+      const loginAlert = document.getElementById('login-alert');
+      const counterAlert = document.getElementById('counter-alert');
+      const currentCounter = document.getElementById('current-counter');
+      const newCountInput = document.getElementById('new-count');
+      const logoutBtn = document.getElementById('logout-btn');
+      
+      // Check authentication status on page load
+      function checkAuthStatus() {
+        if (isAdminLoggedIn()) {
+          showCounterForm();
+          loadCurrentCount();
+        } else {
+          showLoginForm();
+        }
+      }
+      
+      // Show login form
+      function showLoginForm() {
+        loginFormContainer.classList.remove('hidden');
+        counterFormContainer.classList.add('hidden');
+      }
+      
+      // Show counter form
+      function showCounterForm() {
+        loginFormContainer.classList.add('hidden');
+        counterFormContainer.classList.remove('hidden');
+      }
+      
+      // Load current counter value
+      async function loadCurrentCount() {
+        try {
+          const counterData = await getCounterData();
+          currentCounter.innerHTML = `
+            <p>Current count: <strong>${counterData.currentCount.toLocaleString()}</strong></p>
+            <p>Goal count: <strong>${counterData.goalCount.toLocaleString()}</strong></p>
+            <p>Last updated: <strong>${new Date(counterData.lastUpdated.toDate()).toLocaleDateString()}</strong></p>
+          `;
+          
+          // Set the current count as default value for the input
+          newCountInput.value = counterData.currentCount;
+          newCountInput.min = counterData.currentCount; // Ensure new count is at least the current count
+          
+        } catch (error) {
+          currentCounter.innerHTML = `<p class="error-message">Error loading current count</p>`;
+          console.error('Error loading counter:', error);
+        }
+      }
+      
+      // Login form submit handler
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        try {
+          loginAlert.classList.add('hidden');
+          
+          const success = await adminLogin(email, password);
+          
+          if (success) {
+            showCounterForm();
+            loadCurrentCount();
+          } else {
+            loginAlert.textContent = 'Invalid email or password';
+            loginAlert.classList.remove('hidden');
+          }
+        } catch (error) {
+          loginAlert.textContent = 'Login failed: ' + error.message;
+          loginAlert.classList.remove('hidden');
+        }
+      });
+      
+      // Counter form submit handler
+      counterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const newCount = parseInt(newCountInput.value);
+        
+        try {
+          counterAlert.classList.add('hidden');
+          
+          const success = await updateCounterData(newCount);
+          
+          if (success) {
+            counterAlert.textContent = 'Counter updated successfully!';
+            counterAlert.classList.remove('hidden');
+            counterAlert.classList.remove('alert-danger');
+            counterAlert.classList.add('alert-success');
+            
+            // Reload the current count
+            loadCurrentCount();
+          } else {
+            counterAlert.textContent = 'Failed to update counter';
+            counterAlert.classList.remove('hidden');
+            counterAlert.classList.remove('alert-success');
+            counterAlert.classList.add('alert-danger');
+          }
+        } catch (error) {
+          counterAlert.textContent = 'Error: ' + error.message;
+          counterAlert.classList.remove('hidden');
+          counterAlert.classList.remove('alert-success');
+          counterAlert.classList.add('alert-danger');
+        }
+      });
+      
+      // Logout button handler
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await adminLogout();
+          showLoginForm();
+        } catch (error) {
+          console.error('Logout error:', error);
+        }
+      });
+      
+      // Initialize
+      checkAuthStatus();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMjU2M0VCIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTE0IDEwbC0yIDFtMCAwbC0yLTFtMiAxdjIuNU0yMCA3bC0yIDFtMi0xbC0yLTFtMiAxdjIuNU0xNCA0bC0yLTEtMiAxTTQgN2wyLTFNNCA3bDIgMU00IDd2Mi41TTEyIDIxbC0yLTFtMiAxbDItMW0tMiAxdi0yLjVNNiAxOGwtMi0xdi0yLjVNMTggMThsMi0xdi0yLjUiIC8+PC9zdmc+" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dublin Squash Initiative</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Tracking our progress toward introducing 1% of Dublin's population to squash" />
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <div class="header-content">
+          <div class="header-logo">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="logo-icon" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" 
+              />
+            </svg>
+            <a href="/" class="logo-text">Dublin Squash Initiative</a>
+          </div>
+          
+          <a href="/admin.html" class="admin-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="admin-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Admin
+          </a>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div id="counter-card" class="counter-card">
+          <div class="loading">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-content">
+          <div>© <span id="current-year"></span> Dublin Squash Initiative</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">About</a>
+            <span class="footer-divider">|</span>
+            <a href="#" class="footer-link">Contact</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="db.js"></script>
+    <script type="module">
+      import { getCounterData } from './db.js';
+      
+      // Set current year in footer
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+      
+      // Render counter card with data
+      async function renderCounterCard() {
+        try {
+          const counterData = await getCounterData();
+          const counterCard = document.getElementById('counter-card');
+          
+          const { currentCount, goalCount, lastUpdated } = counterData;
+          const remainingCount = goalCount - currentCount;
+          const progressPercentage = (currentCount / goalCount) * 100;
+          
+          const formattedDate = lastUpdated 
+            ? new Date(lastUpdated.toDate()).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              }) 
+            : 'Unknown';
+          
+          counterCard.innerHTML = `
+            <div class="card-content">
+              <div class="card-header">
+                <h2 class="card-title">Growing Squash in Dublin</h2>
+                <p class="card-subtitle">Tracking our progress toward introducing 1% of Dublin's population to squash</p>
+              </div>
+  
+              <div class="counter-display">
+                <div class="counter-label">People introduced to squash so far:</div>
+                <div class="counter-value">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="counter-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <span>${currentCount.toLocaleString()}</span>
+                </div>
+              </div>
+  
+              <div class="progress-section">
+                <div class="progress-labels">
+                  <span>0</span>
+                  <span>${goalCount.toLocaleString()}</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: ${progressPercentage}%"></div>
+                </div>
+                <div class="progress-info">
+                  <span class="progress-status">Current progress</span>
+                  <span class="progress-percentage">${progressPercentage.toFixed(1)}%</span>
+                </div>
+              </div>
+  
+              <div class="remaining-counter">
+                <div class="remaining-info">
+                  <div class="remaining-label">To reach our 1% goal, we need:</div>
+                  <div class="remaining-value">
+                    <span class="remaining-number">${remainingCount.toLocaleString()}</span>
+                    <span class="remaining-text">more people</span>
+                  </div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="trend-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+  
+              <div class="counter-footer">
+                <p>1% of Dublin's population: ${goalCount.toLocaleString()} people</p>
+                <p>Last updated: ${formattedDate}</p>
+              </div>
+            </div>
+          `;
+          
+        } catch (error) {
+          console.error('Error rendering counter:', error);
+          const counterCard = document.getElementById('counter-card');
+          counterCard.innerHTML = `
+            <div class="card-content">
+              <h2 class="error-title">Error Loading Data</h2>
+              <p class="error-message">We couldn't load the counter data. Please try again later.</p>
+            </div>
+          `;
+        }
+      }
+      
+      // Initialize
+      renderCounterCard();
+    </script>
+  </body>
+</html>
